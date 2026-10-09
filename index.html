@@ -111,6 +111,27 @@ button:focus-visible,.ctl select:focus-visible,.ctl input:focus-visible{outline:
 .guide summary{cursor:pointer;font-weight:600}
 .guide ol{margin:8px 0 0;padding-left:20px;display:grid;gap:4px}
 code{font-family:var(--f-mono);font-size:.85em}
+
+.spr-sec{display:grid;gap:10px}
+.spr-sec h2{font:700 1.15rem var(--f-display);font-stretch:90%;margin:0}
+.spr-sec>p{font-size:.85rem;color:var(--muted);margin:0}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:10px}
+.sc{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:8px;align-content:start;min-width:0}
+.sc.now{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.sc.extra{background:var(--bg)}
+.sc-h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.sc-h strong{font:700 1rem var(--f-display);font-stretch:90%}
+.sc-h .now-tag{font:600 .68rem var(--f-body);padding:0 6px;border-radius:4px;background:var(--accent);color:var(--surface)}
+.sc-d{font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.sc-n{display:flex;align-items:baseline;gap:6px}
+.sc-n b{font:800 1.6rem var(--f-display);font-stretch:85%;font-variant-numeric:tabular-nums}
+.sc-n span{font-size:.8rem;color:var(--muted)}
+.sc-s{display:flex;gap:10px;flex-wrap:wrap;font-size:.76rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.sc-s i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:3px;vertical-align:middle}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{font:600 .72rem var(--f-mono);padding:1px 6px;border-radius:4px;text-decoration:none;border:1px solid var(--line);color:var(--ink);background:var(--surface)}
+.chip.s-doing{border-color:var(--s-doing);color:var(--s-doing)} .chip.s-done{border-color:var(--s-done);color:var(--s-done);background:var(--s-done-t)}
+.empty-s{font-size:.78rem;color:var(--muted)}
 </style>
 
 <div class="wrap">
@@ -129,6 +150,12 @@ code{font-family:var(--f-mono);font-size:.85em}
   <div class="btns"><button type="button" id="b-undo" disabled>Descartar alterações</button><button type="button" class="primary" id="b-copy" disabled>Copiar status</button></div>
   <p class="msg" id="msg" aria-live="polite"></p>
   <div class="out" id="out" hidden><label for="json">Conteúdo para colar no arquivo <code>CROSSSELL_status.json</code> do GitHub</label><textarea id="json" readonly></textarea></div>
+</section>
+
+<section class="spr-sec" aria-labelledby="t-spr">
+  <h2 id="t-spr">Issues por sprint</h2>
+  <p>Contagem pelo campo Sprint de cada quadro. Muda na hora quando você altera a sprint de um quadro; para valer para todos, publique o status no GitHub.</p>
+  <div class="sgrid" id="sgrid"></div>
 </section>
 
 <details class="guide"><summary>Como atualizar status e sprint para todo o time</summary>
@@ -153,6 +180,39 @@ code{font-family:var(--f-mono);font-size:.85em}
 <script>
 (function(){
   const DEFAULT = {"atualizado": "2026-10-08", "itens": {"DVARPV-9267": {"status": "Concluído", "sprint": ""}, "DVARPR-2075": {"status": "Backlog", "sprint": ""}, "DVARPR-2076": {"status": "Backlog", "sprint": ""}, "DVARPR-2077": {"status": "Backlog", "sprint": ""}, "DVARPR-2078": {"status": "Backlog", "sprint": ""}, "DVARPR-2079": {"status": "Backlog", "sprint": ""}, "DVARPR-2080": {"status": "Backlog", "sprint": ""}, "DVARPR-2082": {"status": "Backlog", "sprint": ""}, "DVARPR-2083": {"status": "Backlog", "sprint": ""}, "DVARPR-2084": {"status": "Backlog", "sprint": ""}, "DVARPR-2104": {"status": "Backlog", "sprint": ""}, "DVARPR-2105": {"status": "Backlog", "sprint": ""}, "DVARPR-2107": {"status": "Backlog", "sprint": ""}, "DVARPR-2108": {"status": "Backlog", "sprint": ""}, "DVARPR-2106": {"status": "Backlog", "sprint": ""}, "DVARPR-2086": {"status": "Backlog", "sprint": ""}, "DVARPR-2141": {"status": "Backlog", "sprint": ""}, "DVARPR-2087": {"status": "Backlog", "sprint": ""}, "DVARPR-2089": {"status": "Backlog", "sprint": ""}, "DVARPR-2097": {"status": "Backlog", "sprint": ""}, "DVARPR-2110": {"status": "Backlog", "sprint": ""}, "DVARPR-2113": {"status": "Backlog", "sprint": ""}, "DVARPR-2114": {"status": "Backlog", "sprint": ""}, "DVARPR-2115": {"status": "Backlog", "sprint": ""}, "DVARPR-2116": {"status": "Backlog", "sprint": ""}, "DVARPR-2112": {"status": "Backlog", "sprint": ""}, "DVARPR-2117": {"status": "Backlog", "sprint": ""}, "DVARPR-2111": {"status": "Backlog", "sprint": ""}, "DVARPR-2099": {"status": "Backlog", "sprint": ""}, "DVARPR-2100": {"status": "Backlog", "sprint": ""}, "DVARPR-2101": {"status": "Backlog", "sprint": ""}, "DVARPR-2102": {"status": "Backlog", "sprint": ""}, "DVARPR-2119": {"status": "Backlog", "sprint": ""}, "DVARPR-2120": {"status": "Backlog", "sprint": ""}, "DVARPR-2122": {"status": "Backlog", "sprint": ""}, "DVARPR-2123": {"status": "Backlog", "sprint": ""}}};
+  const SPRINTS_DEFAULT = [
+    {n:'8', ini:'2026-10-13', fim:'2026-10-30', dias:14},
+    {n:'9', ini:'2026-11-03', fim:'2026-11-19', dias:14},
+    {n:'10', ini:'2026-11-23', fim:'2026-12-10', dias:14},
+    {n:'11', ini:'2026-12-11', fim:'2026-12-30', dias:14}
+  ];
+  let SPRINTS = SPRINTS_DEFAULT;
+  const sprNum = v => { const m=String(v||'').match(/\d+/); return m? String(parseInt(m[0],10)) : ''; };
+  const br = iso => { const p=iso.split('-'); return p[2]+'/'+p[1]; };
+  const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  function renderSprints(){
+    const groups={}; SPRINTS.forEach(sp=>groups[sp.n]=[]);
+    const none=[], other={};
+    Object.keys(cur.itens).sort().forEach(k=>{
+      const it=cur.itens[k], n=sprNum(it.sprint);
+      if(!n) none.push(k); else if(groups[n]) groups[n].push(k); else (other[n]=other[n]||[]).push(k);
+    });
+    const today=new Date(); const t=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+    const chip=k=>{ const st=(cur.itens[k]||{}).status; const c=st==='Concluído'?'s-done':st==='Em andamento'?'s-doing':''; return '<a class="chip '+c+'" href="#'+k+'" title="'+esc(st||'')+'">'+k.replace('DVARPR-','')+'</a>'; };
+    const stats=ks=>{ let d=0,g=0; ks.forEach(k=>{const s=(cur.itens[k]||{}).status; if(s==='Concluído')d++; else if(s==='Em andamento')g++;}); return {d,g,b:ks.length-d-g}; };
+    const card=(title,sub,ks,cls,nowTag)=>{
+      const s=stats(ks);
+      return '<div class="sc '+(cls||'')+'"><div class="sc-h"><strong>'+esc(title)+'</strong>'+(nowTag?'<span class="now-tag">sprint atual</span>':'')+'</div>'
+        +(sub?'<div class="sc-d">'+sub+'</div>':'')
+        +'<div class="sc-n"><b>'+ks.length+'</b><span>'+(ks.length===1?'issue':'issues')+'</span></div>'
+        +(ks.length?'<div class="sc-s"><span><i style="background:var(--s-done)"></i>'+s.d+' concluída(s)</span><span><i style="background:var(--s-doing)"></i>'+s.g+' em andamento</span><span><i style="background:var(--s-back)"></i>'+s.b+' backlog</span></div><div class="chips">'+ks.map(chip).join('')+'</div>':'<div class="empty-s">Nenhuma issue com esta sprint.</div>')
+        +'</div>';
+    };
+    let html=SPRINTS.map(sp=>{ const now=t>=sp.ini&&t<=sp.fim; return card('Sprint '+sp.n, br(sp.ini)+' – '+br(sp.fim)+' · '+sp.dias+' dias úteis', groups[sp.n], now?'now':'', now); }).join('');
+    Object.keys(other).sort((a,b)=>a-b).forEach(n=>{ html+=card('Sprint '+n,'fora do calendário cadastrado',other[n],'extra'); });
+    html+=card('Sem sprint','issues ainda não planejadas',none,'extra');
+    $('sgrid').innerHTML=html;
+  }
   const FILE = 'CROSSSELL_status.json';
   const $ = id => document.getElementById(id);
   let base = null, cur = null;
@@ -182,10 +242,12 @@ code{font-family:var(--f-mono);font-size:.85em}
     const dirty=document.querySelectorAll('.st.changed').length;
     $('b-copy').disabled=!dirty; $('b-undo').disabled=!dirty;
     if(dirty){ $('msg').className='msg warn'; $('msg').textContent=dirty+' quadro(s) alterado(s) ainda não publicado(s). Clique em Copiar status e cole no GitHub.'; }
+    renderSprints();
   }
   function fmt(d){ const p=String(d).split('-'); return p.length===3? p[2]+'/'+p[1]+'/'+p[0] : d; }
   function start(data, from){
     base=data; if(!base.itens) base.itens={};
+    if(Array.isArray(data.sprints)&&data.sprints.length) SPRINTS=data.sprints.map(x=>({n:sprNum(x.n||x.sprint),ini:x.ini||x.inicio,fim:x.fim||x.termino,dias:x.dias||x.dias_uteis}));
     Object.keys(DEFAULT.itens).forEach(k=>{ if(!base.itens[k]) base.itens[k]=clone(DEFAULT.itens[k]); });
     cur=clone(base);
     $('upd').textContent = from==='file' ? 'Status publicado em '+fmt(base.atualizado||'') : 'Arquivo '+FILE+' não encontrado: mostrando o status inicial';
@@ -204,7 +266,7 @@ code{font-family:var(--f-mono);font-size:.85em}
   $('b-undo').addEventListener('click',()=>{ cur=clone(base); $('out').hidden=true; $('msg').textContent=''; apply(); });
   $('b-copy').addEventListener('click',()=>{
     const d=new Date(), iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-    const outObj={atualizado:iso,itens:cur.itens}; const txt=JSON.stringify(outObj,null,2);
+    const outObj={atualizado:iso,itens:cur.itens}; if(Array.isArray(base.sprints)) outObj.sprints=base.sprints; const txt=JSON.stringify(outObj,null,2);
     const ta=$('json'); ta.value=txt; $('out').hidden=false;
     const done=()=>{ $('msg').className='msg ok'; $('msg').textContent='Copiado. Agora cole no arquivo '+FILE+' do GitHub e clique em Commit changes.'; };
     const fail=()=>{ ta.focus(); ta.select(); $('msg').className='msg warn'; $('msg').textContent='Não consegui copiar automaticamente. O conteúdo está selecionado abaixo: use Ctrl + C.'; };
