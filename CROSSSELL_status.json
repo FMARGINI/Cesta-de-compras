@@ -1,5 +1,5 @@
 {
-  "atualizado": "2026-11-03",
+  "atualizado": "2026-11-25",
   "itens": {
     "DVARPV-9267": {
       "status": "Concluído",
@@ -66,11 +66,11 @@
       "sprint": "8"
     },
     "DVARPR-2087": {
-      "status": "Backlog",
+      "status": "Concluído",
       "sprint": "9"
     },
     "DVARPR-2089": {
-      "status": "Backlog",
+      "status": "Concluído",
       "sprint": "9"
     },
     "DVARPR-2097": {
@@ -110,7 +110,7 @@
       "sprint": "10"
     },
     "DVARPR-2099": {
-      "status": "Backlog",
+      "status": "Concluído",
       "sprint": "9"
     },
     "DVARPR-2100": {
@@ -142,15 +142,15 @@
       "sprint": "11"
     },
     "DVARPR-2141": {
-      "status": "Backlog",
+      "status": "Concluído",
       "sprint": "9"
     },
     "DVARPR-2357": {
-      "status": "Backlog",
+      "status": "Em andamento",
       "sprint": "9"
     },
     "DVARPR-2360": {
-      "status": "Backlog",
+      "status": "Em andamento",
       "sprint": "9"
     }
   }
