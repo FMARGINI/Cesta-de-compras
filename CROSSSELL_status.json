@@ -1,5 +1,5 @@
 {
-  "atualizado": "2026-11-25",
+  "atualizado": "2026-11-26",
   "itens": {
     "DVARPV-9267": {
       "status": "Concluído",
@@ -127,7 +127,7 @@
     },
     "DVARPR-2119": {
       "status": "Backlog",
-      "sprint": "10"
+      "sprint": "11"
     },
     "DVARPR-2120": {
       "status": "Backlog",
